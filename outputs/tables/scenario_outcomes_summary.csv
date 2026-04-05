@@ -1,0 +1,2 @@
+scenario_name,total_budget_baseline,total_budget_scenario,baseline_contribution_est,scenario_contribution_est,estimated_contribution_uplift,efficient_channels_after_policy,inefficient_channels_after_policy
+budget_reallocation_v1,5552234.85,5552234.85,16564031.9227,36877987.2017,20313955.279,3,2

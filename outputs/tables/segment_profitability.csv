@@ -1,0 +1,5 @@
+dimension_type,dimension_value,total_revenue,total_cost,contribution_margin,margin_pct,revenue_share,record_count
+segment,Enterprise,26282659.39,19392639.26,6890020.13,0.262151,0.481403,779
+segment,Mid-Market,20220543.67,13406364.76,6814178.91,0.336993,0.370367,2415
+segment,SMB,6288791.93,4056147.54,2232644.39,0.35502,0.115188,3184
+segment,Startup,1803971.55,1176784.31,627187.24,0.34767,0.033042,2622

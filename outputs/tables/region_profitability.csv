@@ -1,0 +1,5 @@
+dimension_type,dimension_value,total_revenue,total_cost,contribution_margin,margin_pct,revenue_share,record_count
+region,North America,19715176.99,13751128.62,5964048.37,0.302511,0.361111,3225
+region,EMEA,15778734.37,10909909.17,4868825.2,0.308569,0.289009,2812
+region,APAC,10638073.31,7434985.52,3203087.79,0.301097,0.194851,1681
+region,LATAM,8463981.87,5935912.56,2528069.31,0.298686,0.155029,1282

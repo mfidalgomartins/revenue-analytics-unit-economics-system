@@ -1,0 +1,5 @@
+dimension_type,dimension_value,total_revenue,total_cost,contribution_margin,margin_pct,revenue_share,record_count
+product_type,Premium,19150210.41,14385903.66,4764306.75,0.248786,0.350762,12432
+product_type,Core,16729012.18,9783185.73,6945826.45,0.415196,0.306415,33763
+product_type,Services,13573771.86,11166099.68,2407672.18,0.177377,0.248622,7711
+product_type,Add-on,5142972.09,2696746.8,2446225.29,0.475644,0.094201,16044
