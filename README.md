@@ -18,27 +18,34 @@ Build a decision-grade analytics system that:
 ## 3. Project Structure
 ```text
 revenue-analytics-unit-economics-system/
-├── data/
-│   ├── raw/                  # Synthetic source tables
-│   └── processed/            # Engineered analytical datasets
+├── README.md
+├── requirements.txt
+├── requirements-dev.txt
+├── .gitignore
 ├── src/
+│   ├── analysis/             # Core business analysis narrative
+│   ├── dashboard_builder/    # Self-contained executive dashboard
 │   ├── data_generation/      # Synthetic business data simulation
 │   ├── data_profiling/       # Data profiling + quality checks
 │   ├── feature_engineering/  # Customer/cohort/unit economics tables
-│   ├── analysis/             # Core business analysis narrative
-│   ├── scenario_engine/      # Decision scenarios and reallocation logic
-│   ├── visualization/        # Publication-quality chart pack
-│   ├── dashboard_builder/    # Self-contained executive dashboard
 │   ├── governance/           # Metric registry + artifact publication controls
-│   └── validation/           # Pre-delivery QA validation
+│   ├── scenario_engine/      # Decision scenarios and reallocation logic
+│   ├── validation/           # Pre-delivery QA validation
+│   └── visualization/        # Publication-quality chart pack
+├── data/
+│   ├── raw/                  # Synthetic source tables
+│   └── processed/            # Engineered analytical datasets
+├── docs/
+│   └── ...                   # Methodology, governance, and QA reports
+├── tests/
+│   └── ...                   # Automated validation and regression checks
 ├── outputs/
 │   ├── charts/               # Chart pack (.png)
+│   ├── dashboard/            # Executive HTML dashboard deliverable
 │   ├── tables/               # Analysis/profiling/validation tables
 │   └── reports/              # Business/reporting markdown outputs
-├── dashboard/
-│   └── executive_dashboard.html
-├── requirements.txt
-└── README.md
+└── notebooks/
+    └── ...                   # Narrative analysis notebook sections
 ```
 
 ## 4. Methodology
@@ -154,7 +161,7 @@ Operational recommendations from the analysis:
 ## 9. Dashboard Overview
 The project includes an executive-facing, single-file dashboard:
 
-- File: `dashboard/executive_dashboard.html`
+- File: `outputs/dashboard/executive_dashboard.html`
 - Fully self-contained and offline-capable (embedded data + rendering logic)
 - Includes:
   - executive summary strip
@@ -200,7 +207,7 @@ Primary outputs:
 - Charts: `outputs/charts/`
 - Analysis tables: `outputs/tables/`
 - Report outputs: `outputs/reports/`
-- Dashboard: `dashboard/executive_dashboard.html`
+- Dashboard: `outputs/dashboard/executive_dashboard.html`
 - Metric governance registry: `outputs/reports/metric_governance_registry.md`
 - Scenario decision engine: `outputs/reports/scenario_decision_engine_report.md`
 - Scenario benchmark pack: `outputs/reports/scenario_benchmark_report.md`

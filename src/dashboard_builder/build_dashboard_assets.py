@@ -15,7 +15,7 @@ from src.governance.metric_registry import to_payload_dict
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
-DASHBOARD_DIR = PROJECT_ROOT / "dashboard"
+DASHBOARD_DIR = PROJECT_ROOT / "outputs" / "dashboard"
 REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 

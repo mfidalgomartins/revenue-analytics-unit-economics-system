@@ -55,7 +55,7 @@
 - `outputs/reports/release_governance.md`: release governance policy and current-version status.
 
 ## Dashboard
-- `dashboard/`: dashboard code/config/export files for BI presentation.
+- `outputs/dashboard/`: executive dashboard export artifacts for BI presentation.
 
 ## Docs
 - `docs/project_execution_plan.md`: end-to-end implementation and run-order plan.
