@@ -1,6 +1,6 @@
 # Executive Revenue Command Center
 
-Executive dashboard export for revenue and unit economics.
+Interactive dashboard for revenue and unit economics.
 
 **Live dashboard (recommended):**  
 https://mfidalgomartins.github.io/revenue-unit-economics-system/
