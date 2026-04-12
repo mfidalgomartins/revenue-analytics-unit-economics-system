@@ -1993,7 +1993,7 @@ def run() -> None:
     payload = build_embedded_payload(customers, transactions, marketing)
     html = build_dashboard_html(payload)
 
-    out_path = DASHBOARD_DIR / "executive_dashboard.html"
+    out_path = DASHBOARD_DIR / "executive-revenue-unit-economics-command-center.html"
     out_path.write_text(html, encoding="utf-8")
 
     print("Executive dashboard assets built.")

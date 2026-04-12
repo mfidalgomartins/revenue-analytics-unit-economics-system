@@ -24,7 +24,7 @@ reports/        tests/          docs/
 ```
 
 ## Core outputs
-- `outputs/dashboard/executive_dashboard.html`
+- `outputs/dashboard/executive-revenue-unit-economics-command-center.html`
 - `outputs/reports/decision_brief.md`
 - `outputs/tables/scenario_reallocation_plan.csv`
 - `outputs/reports/pre_delivery_validation_report.md`
