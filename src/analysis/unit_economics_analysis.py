@@ -10,8 +10,6 @@ Outputs generated:
 - outputs/tables/product_profitability.csv
 - outputs/tables/low_margin_growth_pockets.csv
 - outputs/tables/main_analysis_findings.csv
-- notebooks/main_analysis_notebook_section.md
-- outputs/reports/executive_summary_main_analysis.md
 """
 
 from __future__ import annotations
@@ -34,8 +32,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 OUTPUT_TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
-REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
-NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
 
 
 def safe_pct_change(new_value: float, base_value: float) -> float:
@@ -600,63 +596,6 @@ def compute_segment_profitability(
     )
 
 
-def write_notebook_section(findings: pd.DataFrame) -> None:
-    NOTEBOOKS_DIR.mkdir(parents=True, exist_ok=True)
-
-    sections = []
-    for row in findings.itertuples(index=False):
-        sections.append(
-            "\n".join(
-                [
-                    f"## {row.section}",
-                    f"**Question being answered**: {row.question}",
-                    f"**Metrics used**: {row.metrics_used}",
-                    f"**Result**: {row.result}",
-                    f"**Business interpretation**: {row.business_interpretation}",
-                    f"**Caveats**: {row.caveats}",
-                ]
-            )
-        )
-
-    content = (
-        "# Main Analysis Notebook Section\n\n"
-        "This section provides the core analytical narrative for the Revenue Analytics & Unit Economics System.\n\n"
-        + "\n\n".join(sections)
-        + "\n\n## Structured Outputs\n"
-        + "- `outputs/tables/monthly_revenue_health.csv`\n"
-        + "- `outputs/tables/revenue_decomposition_effects.csv`\n"
-        + "- `outputs/tables/cohort_retention_summary.csv`\n"
-        + "- `outputs/tables/unit_economics_channel_diagnostics.csv`\n"
-        + "- `outputs/tables/segment_profitability.csv`\n"
-        + "- `outputs/tables/region_profitability.csv`\n"
-        + "- `outputs/tables/product_profitability.csv`\n"
-        + "- `outputs/tables/low_margin_growth_pockets.csv`\n"
-        + "- `outputs/tables/main_analysis_findings.csv`\n"
-    )
-
-    (NOTEBOOKS_DIR / "main_analysis_notebook_section.md").write_text(content, encoding="utf-8")
-
-
-def write_executive_summary(findings: pd.DataFrame) -> None:
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-
-    summary_lines = [
-        "# Executive Summary - Main Analysis",
-        "",
-        "1. Revenue and contribution margin are growing in absolute terms, but cost growth must be monitored to confirm sustainable quality.",
-        "2. Revenue decomposition shows whether growth is volume-led or supported by monetization/mix improvements; this is key to sustainability.",
-        "3. Cohort retention signals indicate how much growth is retained versus replaced by new acquisition.",
-        "4. Unit economics identify clear channel winners and laggards using CAC, LTV/CAC, and payback thresholds.",
-        "5. Low-margin segment/region/product pockets reveal where headline growth may hide weak profitability.",
-        "",
-        "Detailed section findings are available in `outputs/tables/main_analysis_findings.csv` and `notebooks/main_analysis_notebook_section.md`.",
-    ]
-
-    (REPORTS_DIR / "executive_summary_main_analysis.md").write_text(
-        "\n".join(summary_lines), encoding="utf-8"
-    )
-
-
 def run() -> None:
     OUTPUT_TABLES_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -702,13 +641,8 @@ def run() -> None:
     )
     findings.to_csv(OUTPUT_TABLES_DIR / "main_analysis_findings.csv", index=False)
 
-    write_notebook_section(findings)
-    write_executive_summary(findings)
-
     print("Main analysis completed.")
     print(f"findings_table: {OUTPUT_TABLES_DIR / 'main_analysis_findings.csv'}")
-    print(f"notebook_section: {NOTEBOOKS_DIR / 'main_analysis_notebook_section.md'}")
-    print(f"executive_summary: {REPORTS_DIR / 'executive_summary_main_analysis.md'}")
 
 
 def main() -> None:

@@ -36,16 +36,16 @@ revenue-analytics-unit-economics-system/
 │   ├── raw/                  # Synthetic source tables
 │   └── processed/            # Engineered analytical datasets
 ├── docs/
-│   └── ...                   # Methodology, governance, and QA reports
+│   └── ...                   # Curated methodology and run guidance
 ├── tests/
 │   └── ...                   # Automated validation and regression checks
+├── sql/
+│   └── ...                   # Reference SQL transforms (DuckDB/Postgres style)
 ├── outputs/
 │   ├── charts/               # Chart pack (.png)
 │   ├── dashboard/            # Executive HTML dashboard deliverable
 │   ├── tables/               # Analysis/profiling/validation tables
 │   └── reports/              # Business/reporting markdown outputs
-└── notebooks/
-    └── ...                   # Narrative analysis notebook sections
 ```
 
 ## 4. Methodology
@@ -115,16 +115,15 @@ Key engineered outputs in `data/processed`:
   - LTV_to_CAC
   - approximate_payback_period
 
-Full definitions: `outputs/reports/feature_dictionary.md` and `outputs/reports/unit_economics_assumptions.md`.
+Assumptions and decision context are summarized in `outputs/reports/decision_brief.md`.
 
 Decision outputs:
 - `outputs/tables/scenario_reallocation_plan.csv`
 - `outputs/tables/scenario_outcomes_summary.csv`
 - `outputs/tables/scenario_stress_test_summary.csv`
 - `outputs/tables/scenario_benchmark_by_seed.csv`
-- `outputs/reports/scenario_decision_engine_report.md`
 - `outputs/tables/data_catalog.csv`
-- `outputs/reports/data_catalog.md`
+- `outputs/reports/decision_brief.md`
 
 ## 7. Key Findings
 From the core analytical output:
@@ -208,10 +207,9 @@ Primary outputs:
 - Analysis tables: `outputs/tables/`
 - Report outputs: `outputs/reports/`
 - Dashboard: `outputs/dashboard/executive_dashboard.html`
+- Decision brief: `outputs/reports/decision_brief.md`
 - Metric governance registry: `outputs/reports/metric_governance_registry.md`
-- Scenario decision engine: `outputs/reports/scenario_decision_engine_report.md`
-- Scenario benchmark pack: `outputs/reports/scenario_benchmark_report.md`
-- Data catalog: `outputs/reports/data_catalog.md`
+- Pre-delivery QA: `outputs/reports/pre_delivery_validation_report.md`
 - Release governance: `outputs/reports/release_governance.md`
 
 ## 11. Limitations
@@ -232,7 +230,3 @@ This project demonstrates practical analytics engineering for business decision-
 - strong metric definitions
 - cross-functional, executive-facing communication
 - pre-delivery QA discipline
-
-## 14. Exceptional Upgrade Plan
-- Full upgrade checklist: `docs/final_upgrades_needed.md`
-- Includes implemented hardening steps (CI, contracts, stress testing, governance artifacts) and remaining world-class upgrades.

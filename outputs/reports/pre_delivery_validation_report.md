@@ -34,9 +34,9 @@ Project: Revenue Analytics & Unit Economics System
 | visualization_checks | mandatory_chart_coverage | PASS | charts_present=8, missing=none |
 | visualization_checks | chart_index_completeness | PASS | chart_index_rows_detected=8 |
 | visualization_checks | axis_sanity_and_misleading_scale | PASS | Money trend charts set y-axis baseline to zero; cohort/ltv-cac also anchored for interpretability. |
-| governance_checks | docs_reports_sync_check | PASS | docs/pre_delivery_validation_report.md should match outputs/reports/pre_delivery_validation_report.md |
+| governance_checks | validation_report_presence | PASS | report_exists=True |
 | governance_checks | metric_registry_presence | PASS | metric_registry_exists=True |
-| governance_checks | data_catalog_presence | PASS | table_exists=True, report_exists=True |
+| governance_checks | data_catalog_presence | PASS | table_exists=True |
 | governance_checks | release_version_semver | PASS | version=1.0.0 |
 | governance_checks | release_changelog_alignment | PASS | changelog_contains_version=True |
 | governance_checks | dashboard_deterministic_metadata | PASS | Dashboard payload should avoid volatile build timestamps. |
@@ -79,6 +79,5 @@ Project: Revenue Analytics & Unit Economics System
 - `outputs/tables/scenario_benchmark_by_seed.csv`
 - `outputs/reports/metric_governance_registry.md`
 - `outputs/tables/data_catalog.csv`
-- `outputs/reports/data_catalog.md`
 - `outputs/tables/release_manifest.csv`
 - `outputs/reports/release_governance.md`

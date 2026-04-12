@@ -9,7 +9,6 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 OUT_TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
-REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 
 def load_raw_tables() -> dict[str, pd.DataFrame]:
@@ -161,36 +160,9 @@ def build_results(tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
 
 def write_outputs(summary: pd.DataFrame) -> None:
     OUT_TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     summary_path = OUT_TABLES_DIR / "raw_validation_summary.csv"
     summary.to_csv(summary_path, index=False)
-
-    pass_count = int((summary["status"] == "PASS").sum())
-    warn_count = int((summary["status"] == "WARN").sum())
-    fail_count = int((summary["status"] == "FAIL").sum())
-
-    report_lines = [
-        "# Raw Data Validation Report",
-        "",
-        "Scope: pre-profiling validation of raw source tables (`customers`, `transactions`, `marketing_spend`).",
-        "",
-        "## Summary",
-        f"- PASS checks: {pass_count}",
-        f"- WARN checks: {warn_count}",
-        f"- FAIL checks: {fail_count}",
-        "",
-        "## Check Results",
-        "",
-        "| check_name | status | detail |",
-        "| --- | --- | --- |",
-    ]
-
-    for row in summary.itertuples(index=False):
-        report_lines.append(f"| {row.check_name} | {row.status} | {row.detail} |")
-
-    report_path = REPORTS_DIR / "raw_validation_report.md"
-    report_path.write_text("\n".join(report_lines), encoding="utf-8")
 
 
 def run() -> None:
@@ -200,7 +172,6 @@ def run() -> None:
 
     print("Raw data validation completed.")
     print(f"summary_csv: {OUT_TABLES_DIR / 'raw_validation_summary.csv'}")
-    print(f"report: {REPORTS_DIR / 'raw_validation_report.md'}")
 
 
 def main() -> None:

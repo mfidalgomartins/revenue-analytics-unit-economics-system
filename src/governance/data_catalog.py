@@ -10,7 +10,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROC_DIR = PROJECT_ROOT / "data" / "processed"
 OUT_TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
-OUT_REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 DATASETS = [
     ("raw", "customers", RAW_DIR / "customers.csv"),
@@ -109,49 +108,6 @@ def build_data_catalog() -> pd.DataFrame:
 
 def write_data_catalog_artifacts() -> None:
     OUT_TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    OUT_REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     catalog = build_data_catalog()
     catalog.to_csv(OUT_TABLES_DIR / "data_catalog.csv", index=False)
-
-    layer_counts = (
-        catalog.groupby("layer")["column"]
-        .count()
-        .reindex(["raw", "processed", "output"])
-        .fillna(0)
-        .astype(int)
-    )
-    dataset_counts = catalog.groupby("dataset")["column"].count().sort_values(ascending=False)
-
-    lines = [
-        "# Data Catalog",
-        "",
-        "This catalog documents field ownership, role, and business purpose across raw, processed, and output layers.",
-        "",
-        "## Coverage Summary",
-        f"- Total cataloged fields: {len(catalog):,}",
-        f"- Raw fields: {int(layer_counts.get('raw', 0)):,}",
-        f"- Processed fields: {int(layer_counts.get('processed', 0)):,}",
-        f"- Output fields: {int(layer_counts.get('output', 0)):,}",
-        "",
-        "## Dataset Field Counts",
-        "| dataset | field_count |",
-        "| --- | --- |",
-    ]
-    for ds, cnt in dataset_counts.items():
-        lines.append(f"| {ds} | {int(cnt)} |")
-
-    lines.extend(
-        [
-            "",
-            "## Owner Model",
-            "- Data Engineering owns raw ingestion contracts and schema stability.",
-            "- Analytics Engineering owns processed semantic tables and metric definitions.",
-            "- Analytics Lead owns decision-facing output artifacts and business interpretation guardrails.",
-            "",
-            "## Full Catalog File",
-            "- `outputs/tables/data_catalog.csv`",
-        ]
-    )
-
-    (OUT_REPORTS_DIR / "data_catalog.md").write_text("\n".join(lines), encoding="utf-8")

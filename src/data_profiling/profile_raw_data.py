@@ -11,7 +11,6 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 OUTPUT_TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
-REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 
 @dataclass(frozen=True)
@@ -85,62 +84,6 @@ def detect_candidate_key(df: pd.DataFrame, candidate_keys: list[list[str]]) -> t
     return f"{fallback} (not unique)", fallback_dupes
 
 
-def build_null_profile(table_name: str, df: pd.DataFrame) -> pd.DataFrame:
-    rows = []
-    row_count = len(df)
-    for col in df.columns:
-        null_count = int(df[col].isna().sum())
-        rows.append(
-            {
-                "table_name": table_name,
-                "column_name": col,
-                "dtype": str(df[col].dtype),
-                "null_count": null_count,
-                "null_rate": (null_count / row_count) if row_count else 0.0,
-            }
-        )
-    return pd.DataFrame(rows)
-
-
-def build_cardinality_profile(table_name: str, df: pd.DataFrame, categorical_columns: list[str]) -> pd.DataFrame:
-    rows = []
-    row_count = len(df)
-    for col in categorical_columns:
-        if col not in df.columns:
-            continue
-        distinct_count = int(df[col].nunique(dropna=True))
-        rows.append(
-            {
-                "table_name": table_name,
-                "column_name": col,
-                "distinct_count": distinct_count,
-                "distinct_rate": (distinct_count / row_count) if row_count else 0.0,
-            }
-        )
-    return pd.DataFrame(rows)
-
-
-def classify_columns() -> pd.DataFrame:
-    records = [
-        ("customers", "customer_id", "identifier"),
-        ("customers", "signup_date", "temporal_field"),
-        ("customers", "segment", "dimension"),
-        ("customers", "region", "dimension"),
-        ("customers", "acquisition_channel", "dimension"),
-        ("transactions", "transaction_id", "identifier"),
-        ("transactions", "customer_id", "identifier"),
-        ("transactions", "transaction_date", "temporal_field"),
-        ("transactions", "revenue", "metric"),
-        ("transactions", "cost", "metric"),
-        ("transactions", "product_type", "dimension"),
-        ("marketing_spend", "date", "temporal_field"),
-        ("marketing_spend", "acquisition_channel", "dimension"),
-        ("marketing_spend", "spend", "metric"),
-    ]
-    df = pd.DataFrame(records, columns=["table_name", "column_name", "semantic_role"])
-    df["is_boolean"] = False
-    df["is_text_field"] = False
-    return df
 
 
 def make_issue(
@@ -410,102 +353,19 @@ def summarize_tables(tables: dict[str, pd.DataFrame]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def write_quality_report(
-    summary_df: pd.DataFrame,
-    issues_df: pd.DataFrame,
-    classifications_df: pd.DataFrame,
-) -> None:
-    def to_markdown_fallback(df: pd.DataFrame) -> str:
-        cols = list(df.columns)
-        header = "| " + " | ".join(cols) + " |"
-        divider = "| " + " | ".join(["---"] * len(cols)) + " |"
-        rows = []
-        for rec in df.itertuples(index=False):
-            rows.append("| " + " | ".join(str(value) for value in rec) + " |")
-        return "\n".join([header, divider] + rows)
-
-    issue_view = issues_df[issues_df["issue_count"] > 0].sort_values(["severity", "table_name", "check_name"])
-    if issue_view.empty:
-        issue_lines = "- No active issues detected from the implemented checks."
-    else:
-        lines = []
-        for row in issue_view.itertuples(index=False):
-            lines.append(
-                f"- [{row.severity.upper()}] `{row.table_name}` - `{row.check_name}` "
-                f"({row.column_name}): {row.issue_count:,} rows ({row.issue_rate:.2%}). {row.description}"
-            )
-        issue_lines = "\n".join(lines)
-
-    counts = classifications_df["semantic_role"].value_counts()
-    identifiers = int(counts.get("identifier", 0))
-    dimensions = int(counts.get("dimension", 0))
-    metrics = int(counts.get("metric", 0))
-    temporal = int(counts.get("temporal_field", 0))
-
-    focus_text = (
-        "## Recommended Analytical Focus\n\n"
-        "1. Prioritize margin-adjusted growth by channel and segment using `transactions` + `customers`.\n"
-        "2. Build CAC and spend-efficiency cuts by joining `marketing_spend` to customer acquisition channel over time.\n"
-        "3. Segment negative gross margin transactions (`cost > revenue`) to isolate unprofitable growth pockets.\n"
-        "4. Use signup cohorts and transaction recency to evaluate retention quality before scaling paid channels.\n"
-        "5. Keep key quality gates in place: transaction/customer referential integrity and channel value validation.\n"
-    )
-
-    report = (
-        "# Data Quality Issues Report\n\n"
-        "This report summarizes profiling and quality checks for raw datasets in the Revenue Analytics & Unit Economics System.\n\n"
-        "## Data Profile Summary (High Level)\n\n"
-        f"{to_markdown_fallback(summary_df)}\n\n"
-        "## Data Quality Findings\n\n"
-        f"{issue_lines}\n\n"
-        "## Column Classification Coverage\n\n"
-        f"- Identifiers: {identifiers}\n"
-        f"- Dimensions: {dimensions}\n"
-        f"- Metrics: {metrics}\n"
-        f"- Temporal fields: {temporal}\n"
-        "- Booleans: 0\n"
-        "- Text fields: 0\n\n"
-        f"{focus_text}"
-    )
-    (REPORTS_DIR / "data_quality_issues_report.md").write_text(report, encoding="utf-8")
-    (REPORTS_DIR / "recommended_analytical_focus.md").write_text(focus_text, encoding="utf-8")
-
-
 def run() -> None:
     OUTPUT_TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     tables = load_tables()
     summary_df = summarize_tables(tables)
     issues_df = evaluate_data_quality(tables)
-    classifications_df = classify_columns()
-
-    null_profiles = []
-    cardinality_profiles = []
-    for spec in TABLE_SPECS:
-        df = tables[spec.name]
-        null_profiles.append(build_null_profile(spec.name, df))
-        cardinality_profiles.append(
-            build_cardinality_profile(spec.name, df, spec.categorical_columns)
-        )
-
-    null_profile_df = pd.concat(null_profiles, ignore_index=True)
-    cardinality_df = pd.concat(cardinality_profiles, ignore_index=True)
 
     summary_df.to_csv(OUTPUT_TABLES_DIR / "data_profile_summary.csv", index=False)
-    null_profile_df.to_csv(OUTPUT_TABLES_DIR / "null_profile_by_column.csv", index=False)
-    cardinality_df.to_csv(OUTPUT_TABLES_DIR / "categorical_cardinality_profile.csv", index=False)
     issues_df.to_csv(OUTPUT_TABLES_DIR / "data_quality_issues.csv", index=False)
-    classifications_df.to_csv(OUTPUT_TABLES_DIR / "column_classification.csv", index=False)
-
-    write_quality_report(summary_df, issues_df, classifications_df)
 
     print("Profiling and data quality review completed.")
     print(f"summary_table: {OUTPUT_TABLES_DIR / 'data_profile_summary.csv'}")
-    print(f"null_profile: {OUTPUT_TABLES_DIR / 'null_profile_by_column.csv'}")
     print(f"quality_issues: {OUTPUT_TABLES_DIR / 'data_quality_issues.csv'}")
-    print(f"classification: {OUTPUT_TABLES_DIR / 'column_classification.csv'}")
-    print(f"report: {REPORTS_DIR / 'data_quality_issues_report.md'}")
 
 
 def main() -> None:

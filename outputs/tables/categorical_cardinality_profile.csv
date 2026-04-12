@@ -1,7 +1,0 @@
-table_name,column_name,distinct_count,distinct_rate
-customers,segment,4,0.00044444444444444447
-customers,region,4,0.00044444444444444447
-customers,acquisition_channel,6,0.0006666666666666666
-transactions,product_type,4,5.7183702644746245e-05
-transactions,customer_id,8157,0.11661186561829878
-marketing_spend,acquisition_channel,6,0.0009124087591240876

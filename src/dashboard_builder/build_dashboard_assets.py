@@ -16,7 +16,6 @@ from src.governance.metric_registry import to_payload_dict
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 DASHBOARD_DIR = PROJECT_ROOT / "outputs" / "dashboard"
-REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -111,102 +110,105 @@ def build_dashboard_html(payload: dict) -> str:
   <style>
     :root {
       color-scheme: light;
-      --bg: #f5f7fb;
+      --bg: #f3f5f9;
       --panel: #ffffff;
       --panel-soft: #f8fafc;
-      --ink: #0f172a;
-      --sub: #475569;
-      --line: #d6dde8;
-      --line-soft: #e2e8f0;
-      --brand: #1d4ed8;
-      --good: #059669;
-      --bad: #b91c1c;
-      --warn: #a16207;
+      --ink: #0b1220;
+      --sub: #4a5b76;
+      --line: #d7dde7;
+      --line-soft: #e7ecf3;
+      --brand: #1f4fbf;
+      --good: #0f9d58;
+      --bad: #c62828;
+      --warn: #b26a00;
       --rev: #0b4f6c;
-      --cost: #c44536;
-      --margin: #2a9d8f;
-      --accent: #ffb703;
-      --bar: #264653;
+      --cost: #bf3b2f;
+      --margin: #1f9d89;
+      --accent: #e7a100;
+      --bar: #2f3b5a;
       --header-grad-a: #ffffff;
-      --header-grad-b: #eef2ff;
-      --chip-bg: #eef2ff;
-      --chip-border: #c7d2fe;
-      --chip-ink: #3730a3;
+      --header-grad-b: #eef2f9;
+      --chip-bg: #eef2f9;
+      --chip-border: #c8d3ea;
+      --chip-ink: #2b3b63;
       --control-bg: #ffffff;
-      --control-border: #cbd5e1;
-      --table-head-bg: #f8fafc;
-      --table-row-hover: #f8fafc;
-      --chart-grid: #e5e7eb;
-      --chart-axis: #94a3b8;
-      --chart-text: #334155;
-      --chart-muted: #64748b;
-      --tooltip-bg: rgba(15, 23, 42, 0.92);
-      --shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+      --control-border: #c9d3e2;
+      --table-head-bg: #f5f7fb;
+      --table-row-hover: #f2f5fb;
+      --chart-grid: #e2e8f0;
+      --chart-axis: #8fa1b8;
+      --chart-text: #2a3b52;
+      --chart-muted: #60738c;
+      --tooltip-bg: rgba(12, 18, 32, 0.94);
+      --shadow: 0 10px 26px rgba(15, 23, 42, 0.10);
+      --shadow-soft: 0 6px 16px rgba(15, 23, 42, 0.08);
     }
 
     body[data-theme="dark"] {
       color-scheme: dark;
-      --bg: #081224;
-      --panel: #0f1d33;
-      --panel-soft: #132640;
-      --ink: #e6edf8;
-      --sub: #a9bbd6;
-      --line: #203a5f;
-      --line-soft: #29466e;
-      --brand: #60a5fa;
-      --good: #34d399;
-      --bad: #f87171;
-      --warn: #fbbf24;
-      --rev: #7dd3fc;
-      --cost: #fca5a5;
-      --margin: #5eead4;
-      --accent: #fcd34d;
-      --bar: #93c5fd;
-      --header-grad-a: #0f1d33;
-      --header-grad-b: #142744;
-      --chip-bg: #172e50;
-      --chip-border: #2d4f7b;
-      --chip-ink: #dbeafe;
-      --control-bg: #12243d;
-      --control-border: #345680;
-      --table-head-bg: #12243d;
-      --table-row-hover: #122a49;
-      --chart-grid: #2a4569;
+      --bg: #071425;
+      --panel: #0d1b31;
+      --panel-soft: #112544;
+      --ink: #e6eefb;
+      --sub: #a8bddc;
+      --line: #1e3658;
+      --line-soft: #274166;
+      --brand: #6ea8ff;
+      --good: #4ade80;
+      --bad: #fb7185;
+      --warn: #facc15;
+      --rev: #8bd4ff;
+      --cost: #f8a29a;
+      --margin: #6ee7cf;
+      --accent: #facc15;
+      --bar: #9db9ff;
+      --header-grad-a: #0d1b31;
+      --header-grad-b: #132647;
+      --chip-bg: #142948;
+      --chip-border: #2a4a76;
+      --chip-ink: #d7e6ff;
+      --control-bg: #132646;
+      --control-border: #2c4b77;
+      --table-head-bg: #132646;
+      --table-row-hover: #132a4a;
+      --chart-grid: #2b4569;
       --chart-axis: #6f8fb5;
-      --chart-text: #c6d6ee;
-      --chart-muted: #8ea8ca;
+      --chart-text: #c7d7f2;
+      --chart-muted: #8fa7c6;
       --tooltip-bg: rgba(2, 6, 23, 0.96);
-      --shadow: 0 8px 24px rgba(2, 6, 23, 0.45);
+      --shadow: 0 12px 28px rgba(2, 6, 23, 0.45);
+      --shadow-soft: 0 6px 16px rgba(2, 6, 23, 0.35);
     }
 
     * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-family: "Avenir Next", "SF Pro Display", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
       background: var(--bg);
       color: var(--ink);
       transition: background 180ms ease, color 180ms ease;
     }
 
     .container {
-      width: min(1400px, 96vw);
-      margin: 20px auto 48px;
+      width: min(1480px, 94vw);
+      margin: 26px auto 56px;
       display: grid;
-      gap: 14px;
+      gap: 16px;
     }
 
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 14px;
       box-shadow: var(--shadow);
-      padding: 16px;
+      padding: 18px;
     }
 
     .header-panel {
       display: grid;
-      gap: 14px;
+      gap: 16px;
       background: linear-gradient(145deg, var(--header-grad-a), var(--header-grad-b));
+      padding: 20px;
     }
 
     .header-top {
@@ -219,8 +221,8 @@ def build_dashboard_html(payload: dict) -> str:
 
     h1 {
       margin: 0;
-      font-size: 28px;
-      line-height: 1.2;
+      font-size: 30px;
+      line-height: 1.15;
       color: var(--ink);
     }
 
@@ -238,6 +240,13 @@ def build_dashboard_html(payload: dict) -> str:
       flex-wrap: wrap;
     }
 
+    .print-coverage {
+      display: none;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--sub);
+    }
+
     .meta-chip {
       background: var(--chip-bg);
       border: 1px solid var(--chip-border);
@@ -248,7 +257,8 @@ def build_dashboard_html(payload: dict) -> str:
       white-space: nowrap;
     }
 
-    .theme-btn {
+    .theme-btn,
+    .print-btn {
       border: 1px solid var(--chip-border);
       background: var(--panel);
       color: var(--ink);
@@ -260,14 +270,15 @@ def build_dashboard_html(payload: dict) -> str:
       white-space: nowrap;
     }
 
-    .theme-btn:hover {
+    .theme-btn:hover,
+    .print-btn:hover {
       background: var(--panel-soft);
     }
 
     .filter-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(140px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(6, minmax(150px, 1fr));
+      gap: 12px;
       align-items: end;
     }
 
@@ -275,7 +286,7 @@ def build_dashboard_html(payload: dict) -> str:
       display: block;
       font-size: 12px;
       color: var(--sub);
-      margin-bottom: 4px;
+      margin-bottom: 6px;
       font-weight: 600;
     }
 
@@ -283,21 +294,22 @@ def build_dashboard_html(payload: dict) -> str:
       width: 100%;
       border: 1px solid var(--control-border);
       border-radius: 8px;
-      padding: 7px 8px;
+      padding: 8px 9px;
       font-size: 13px;
       background: var(--control-bg);
       color: var(--ink);
     }
 
     select[multiple] {
-      min-height: 82px;
-      padding: 6px;
+      min-height: 96px;
+      padding: 6px 8px;
     }
 
     .filter-actions {
       display: flex;
       gap: 8px;
       align-items: center;
+      margin-top: 8px;
     }
 
     .btn {
@@ -315,15 +327,29 @@ def build_dashboard_html(payload: dict) -> str:
 
     .summary-strip {
       display: grid;
-      grid-template-columns: repeat(4, minmax(180px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(4, minmax(200px, 1fr));
+      gap: 12px;
     }
 
     .summary-card {
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 12px;
+      border-radius: 12px;
+      padding: 12px 14px;
       background: var(--panel);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      opacity: 0.85;
     }
 
     .summary-title {
@@ -331,48 +357,54 @@ def build_dashboard_html(payload: dict) -> str:
       color: var(--sub);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.2px;
-      margin-bottom: 5px;
+      letter-spacing: 0.3px;
+      margin-bottom: 6px;
     }
 
     .summary-text {
       font-size: 13px;
-      line-height: 1.35;
+      line-height: 1.4;
       color: var(--ink);
     }
 
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(7, minmax(120px, 1fr));
-      gap: 8px;
+      grid-template-columns: repeat(7, minmax(135px, 1fr));
+      gap: 10px;
     }
 
     .kpi-card {
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 10px 10px;
+      border-radius: 12px;
+      padding: 12px 12px;
       background: var(--panel);
-      min-height: 106px;
+      min-height: 116px;
+      box-shadow: var(--shadow-soft);
+      display: grid;
+      gap: 4px;
     }
 
     .kpi-label {
       font-size: 12px;
       color: var(--sub);
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       text-transform: uppercase;
     }
 
     .kpi-value {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: 800;
       line-height: 1.1;
       color: var(--ink);
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .kpi-delta { font-size: 12px; font-weight: 700; }
-    .kpi-note { font-size: 11px; color: #475569; margin-top: 2px; line-height: 1.25; }
+    .kpi-delta.positive { color: var(--good); }
+    .kpi-delta.negative { color: var(--bad); }
+    .kpi-delta.neutral { color: var(--sub); }
+    .kpi-note { font-size: 11px; color: var(--sub); margin-top: 2px; line-height: 1.25; }
 
     .section-head {
       display: flex;
@@ -384,7 +416,7 @@ def build_dashboard_html(payload: dict) -> str:
 
     .section-head h2 {
       margin: 0;
-      font-size: 19px;
+      font-size: 20px;
       color: var(--ink);
     }
 
@@ -396,8 +428,8 @@ def build_dashboard_html(payload: dict) -> str:
 
     .chart-grid-primary {
       display: grid;
-      grid-template-columns: repeat(2, minmax(280px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap: 12px;
     }
 
     .chart-grid-primary .chart-card:nth-child(5) {
@@ -406,19 +438,20 @@ def build_dashboard_html(payload: dict) -> str:
 
     .chart-grid-diagnostic {
       display: grid;
-      grid-template-columns: repeat(2, minmax(280px, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(2, minmax(300px, 1fr));
+      gap: 12px;
     }
 
     .chart-card {
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: 12px;
       background: var(--panel);
-      padding: 10px;
-      min-height: 318px;
+      padding: 12px;
+      min-height: 340px;
       display: grid;
       grid-template-rows: auto auto 1fr;
-      gap: 4px;
+      gap: 6px;
+      box-shadow: var(--shadow-soft);
     }
 
     .chart-title {
@@ -436,13 +469,13 @@ def build_dashboard_html(payload: dict) -> str:
 
     .chart-surface {
       width: 100%;
-      height: 248px;
+      height: 260px;
       position: relative;
     }
 
     .chart-empty {
       width: 100%;
-      height: 248px;
+      height: 260px;
       display: grid;
       place-items: center;
       color: var(--chart-muted);
@@ -456,7 +489,7 @@ def build_dashboard_html(payload: dict) -> str:
       overflow-x: auto;
       border: 1px solid var(--line);
       border-radius: 8px;
-      max-height: 248px;
+      max-height: 264px;
     }
 
     table {
@@ -488,7 +521,7 @@ def build_dashboard_html(payload: dict) -> str:
     .footer-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(220px, 1fr));
-      gap: 10px;
+      gap: 12px;
       font-size: 12px;
       color: var(--chart-text);
     }
@@ -496,7 +529,7 @@ def build_dashboard_html(payload: dict) -> str:
     .foot-block {
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 10px;
+      padding: 12px;
       background: var(--panel);
       line-height: 1.35;
     }
@@ -540,6 +573,51 @@ def build_dashboard_html(payload: dict) -> str:
       .footer-grid { grid-template-columns: 1fr; }
       .header-tools { width: 100%; justify-content: flex-start; }
     }
+
+    @media print {
+      :root { color-scheme: light; }
+      body {
+        background: #ffffff;
+        color: #111827;
+      }
+      .container {
+        width: 100%;
+        margin: 0;
+        gap: 12px;
+      }
+      .panel {
+        box-shadow: none;
+        border: 1px solid #d1d5db;
+        page-break-inside: avoid;
+      }
+      .header-panel {
+        background: #ffffff;
+      }
+      .theme-btn,
+      .print-btn,
+      .filter-grid,
+      .filter-actions,
+      .meta-chip {
+        display: none !important;
+      }
+      .print-coverage { display: block; }
+      .chart-card,
+      .kpi-card,
+      .summary-card,
+      .foot-block {
+        box-shadow: none;
+      }
+      .tooltip {
+        display: none !important;
+      }
+      .chart-surface,
+      .chart-empty {
+        height: 220px;
+      }
+      .table-wrap {
+        max-height: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -549,9 +627,11 @@ def build_dashboard_html(payload: dict) -> str:
         <div>
           <h1 id="dashboard-title">Executive Growth Quality Dashboard</h1>
           <div class="subtitle" id="dashboard-subtitle"></div>
+          <div class="print-coverage" id="coverage-print"></div>
         </div>
         <div class="header-tools">
           <button class="theme-btn" id="btn-theme" type="button" aria-label="Toggle theme"></button>
+          <button class="print-btn" id="btn-print" type="button" aria-label="Print dashboard">Print</button>
           <div class="meta-chip" id="coverage-chip"></div>
         </div>
       </div>
@@ -580,7 +660,7 @@ def build_dashboard_html(payload: dict) -> str:
         <div class="filter-group">
           <label for="filter-product">Product Type (multi-select)</label>
           <select id="filter-product" multiple></select>
-          <div class="filter-actions" style="margin-top:8px;">
+          <div class="filter-actions">
             <button class="btn" id="btn-select-all">Select All</button>
             <button class="btn" id="btn-reset">Reset</button>
           </div>
@@ -611,28 +691,28 @@ def build_dashboard_html(payload: dict) -> str:
       </div>
       <div class="chart-grid-primary">
         <div class="chart-card">
-          <h3 class="chart-title">Revenue momentum remains strong across the selected window</h3>
+          <h3 class="chart-title">Revenue momentum across the selected window</h3>
           <p class="chart-subtitle">Monthly total revenue</p>
           <div id="chart-revenue" class="chart-surface"></div>
         </div>
         <div class="chart-card">
-          <h3 class="chart-title">Contribution margin expansion is the core quality test</h3>
+          <h3 class="chart-title">Contribution margin trend (quality signal)</h3>
           <p class="chart-subtitle">Monthly contribution margin</p>
           <div id="chart-margin" class="chart-surface"></div>
         </div>
         <div class="chart-card">
-          <h3 class="chart-title">Revenue versus cost reveals operating leverage pressure points</h3>
+          <h3 class="chart-title">Revenue vs cost to expose leverage pressure</h3>
           <p class="chart-subtitle">Monthly revenue and cost trend</p>
           <div id="chart-revenue-cost" class="chart-surface"></div>
         </div>
         <div class="chart-card">
-          <h3 class="chart-title">Revenue retention decay indicates dependence on new acquisition</h3>
-          <p class="chart-subtitle">Median cohort revenue retention by month since signup</p>
+          <h3 class="chart-title">Cohort revenue retention decay</h3>
+          <p class="chart-subtitle">Median retention by months since signup</p>
           <div id="chart-cohort-retention" class="chart-surface"></div>
         </div>
         <div class="chart-card">
-          <h3 class="chart-title">Channel unit economics separate scalable growth from value destruction</h3>
-          <p class="chart-subtitle">Average LTV versus CAC by acquisition channel</p>
+          <h3 class="chart-title">Unit economics by channel (LTV vs CAC)</h3>
+          <p class="chart-subtitle">Average LTV versus CAC</p>
           <div id="chart-ltv-cac" class="chart-surface"></div>
         </div>
       </div>
@@ -645,18 +725,18 @@ def build_dashboard_html(payload: dict) -> str:
       </div>
       <div class="chart-grid-diagnostic">
         <div class="chart-card">
-          <h3 class="chart-title">Segment margin dollars are concentrated but rate quality varies</h3>
-          <p class="chart-subtitle">Contribution margin by segment</p>
+          <h3 class="chart-title">Contribution margin by segment</h3>
+          <p class="chart-subtitle">Concentration of margin dollars</p>
           <div id="chart-segment-margin" class="chart-surface"></div>
         </div>
         <div class="chart-card">
-          <h3 class="chart-title">Ticket-size differences reveal monetization concentration by segment</h3>
-          <p class="chart-subtitle">Average revenue per transaction by segment</p>
+          <h3 class="chart-title">Average revenue per transaction</h3>
+          <p class="chart-subtitle">Ticket size differences by segment</p>
           <div id="chart-arpt-segment" class="chart-surface"></div>
         </div>
         <div class="chart-card">
-          <h3 class="chart-title">Customer revenue is long-tailed and concentrated</h3>
-          <p class="chart-subtitle">Distribution of customer revenue in selected scope</p>
+          <h3 class="chart-title">Customer revenue concentration</h3>
+          <p class="chart-subtitle">Distribution of revenue by customer</p>
           <div id="chart-revenue-distribution" class="chart-surface"></div>
         </div>
         <div class="chart-card">
@@ -1519,21 +1599,17 @@ def build_dashboard_html(payload: dict) -> str:
     function renderKpis(cards) {
       const wrap = document.getElementById('kpi-grid');
       wrap.innerHTML = '';
-      const palette = themeColors();
       cards.forEach(card => {
         const deltaClass = !Number.isFinite(card.delta)
-          ? 'kpi-delta'
-          : (card.delta >= 0 ? 'kpi-delta' : 'kpi-delta');
-        const deltaColor = !Number.isFinite(card.delta)
-          ? palette.muted
-          : (card.delta >= 0 ? palette.good : palette.bad);
+          ? 'kpi-delta neutral'
+          : (card.delta >= 0 ? 'kpi-delta positive' : 'kpi-delta negative');
 
         const el = document.createElement('div');
         el.className = 'kpi-card';
         el.innerHTML = `
           <div class="kpi-label">${card.label}</div>
           <div class="kpi-value">${card.value}</div>
-          <div class="${deltaClass}" style="color:${deltaColor};">${card.deltaText}</div>
+          <div class="${deltaClass}">${card.deltaText}</div>
           <div class="kpi-note">${card.note}</div>
         `;
         wrap.appendChild(el);
@@ -1854,8 +1930,9 @@ def build_dashboard_html(payload: dict) -> str:
       applyTheme(resolveInitialTheme());
       document.getElementById('dashboard-title').textContent = DASHBOARD_DATA.meta.dashboard_title;
       document.getElementById('dashboard-subtitle').textContent = DASHBOARD_DATA.meta.question;
-      document.getElementById('coverage-chip').textContent =
-        `Data coverage: ${DASHBOARD_DATA.meta.coverage_start} to ${DASHBOARD_DATA.meta.coverage_end}`;
+      const coverageText = `Data coverage: ${DASHBOARD_DATA.meta.coverage_start} to ${DASHBOARD_DATA.meta.coverage_end}`;
+      document.getElementById('coverage-chip').textContent = coverageText;
+      document.getElementById('coverage-print').textContent = coverageText;
       populateMultiSelect('filter-segment', DASHBOARD_DATA.meta.values.segments);
       populateMultiSelect('filter-region', DASHBOARD_DATA.meta.values.regions);
       populateMultiSelect('filter-channel', DASHBOARD_DATA.meta.values.acquisition_channels);
@@ -1885,6 +1962,7 @@ def build_dashboard_html(payload: dict) -> str:
 
       document.getElementById('btn-reset').addEventListener('click', resetFilters);
       document.getElementById('btn-theme').addEventListener('click', toggleTheme);
+      document.getElementById('btn-print').addEventListener('click', () => window.print());
 
       computeAndRender();
       window.addEventListener('resize', () => computeAndRender());
@@ -1908,57 +1986,6 @@ def build_dashboard_html(payload: dict) -> str:
     return template.replace("__DATA_JSON__", data_json)
 
 
-def write_supporting_notes() -> None:
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-
-    build_note = """# Dashboard Build Note
-
-## Layout Choices
-- Designed as a single-file executive dashboard for offline review in leadership meetings.
-- Prioritized scanability: summary strip -> KPI pulse -> primary analysis -> diagnostics -> risk ranking.
-- Primary section focuses on growth sustainability tests (trend quality, retention durability, channel economics).
-- Diagnostic section isolates structural drivers (segment/region margins, ticket size, customer concentration).
-- Risk table is ranked and action-oriented to support weekly planning and budget steering.
-
-## Technical Choices
-- No external dependencies; all data and rendering logic are embedded for offline use.
-- Uses a lightweight internal SVG rendering layer for charts to keep the file self-contained.
-- Filters (date, segment, region, channel, product) propagate to major visuals and KPI calculations.
-- Tables are sortable in-browser for fast triage.
-- Threshold policy is embedded from the canonical metric registry to keep classification consistent across stack.
-- Payload metadata is deterministic (`data_fingerprint`) to reduce reproducibility drift.
-"""
-
-    section_decisions = """# Dashboard Sections and Decision Support
-
-1. Header and Filters
-- Decision supported: which slice of the business should be evaluated right now.
-
-2. Executive Summary Strip
-- Decision supported: immediate understanding of whether growth quality is improving or degrading.
-
-3. KPI Row
-- Decision supported: performance tracking vs prior period for revenue quality and unit economics.
-
-4. Primary Analysis Section
-- Decision supported: whether current growth is sustainable across trend, retention, and acquisition efficiency.
-
-5. Diagnostic Section
-- Decision supported: where profitability and monetization issues are concentrated (segment, region, transaction quality).
-
-6. Risk / Priority Section
-- Decision supported: what to act on first, with concrete risk interpretation and recommended actions.
-
-7. Footer Notes
-- Decision supported: confidence framing and methodological guardrails for interpretation.
-"""
-
-    (REPORTS_DIR / "dashboard_build_note.md").write_text(build_note, encoding="utf-8")
-    (REPORTS_DIR / "dashboard_sections_decision_support.md").write_text(
-        section_decisions, encoding="utf-8"
-    )
-
-
 def run() -> None:
     DASHBOARD_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -1969,12 +1996,8 @@ def run() -> None:
     out_path = DASHBOARD_DIR / "executive_dashboard.html"
     out_path.write_text(html, encoding="utf-8")
 
-    write_supporting_notes()
-
     print("Executive dashboard assets built.")
     print(f"dashboard_html: {out_path}")
-    print(f"build_note: {REPORTS_DIR / 'dashboard_build_note.md'}")
-    print(f"section_decisions: {REPORTS_DIR / 'dashboard_sections_decision_support.md'}")
 
 
 def main() -> None:

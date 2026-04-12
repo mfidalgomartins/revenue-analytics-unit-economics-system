@@ -448,20 +448,13 @@ def run_checks(data: dict[str, pd.DataFrame]) -> tuple[list[CheckResult], list[I
     )
 
     # 5) Governance and reproducibility checks.
-    docs_validation = PROJECT_ROOT / "docs" / "pre_delivery_validation_report.md"
     reports_validation = REPORTS_DIR / "pre_delivery_validation_report.md"
-    docs_sync_ok = (
-        docs_validation.exists()
-        and reports_validation.exists()
-        and docs_validation.read_text(encoding="utf-8")
-        == reports_validation.read_text(encoding="utf-8")
-    )
     checks.append(
         CheckResult(
             "governance_checks",
-            "docs_reports_sync_check",
-            "PASS" if docs_sync_ok else "WARN",
-            "docs/pre_delivery_validation_report.md should match outputs/reports/pre_delivery_validation_report.md",
+            "validation_report_presence",
+            "PASS" if reports_validation.exists() else "WARN",
+            f"report_exists={reports_validation.exists()}",
         )
     )
 
@@ -476,14 +469,13 @@ def run_checks(data: dict[str, pd.DataFrame]) -> tuple[list[CheckResult], list[I
     )
 
     data_catalog_table = OUT_TABLES_DIR / "data_catalog.csv"
-    data_catalog_report = REPORTS_DIR / "data_catalog.md"
-    data_catalog_ok = data_catalog_table.exists() and data_catalog_report.exists()
+    data_catalog_ok = data_catalog_table.exists()
     checks.append(
         CheckResult(
             "governance_checks",
             "data_catalog_presence",
             "PASS" if data_catalog_ok else "WARN",
-            f"table_exists={data_catalog_table.exists()}, report_exists={data_catalog_report.exists()}",
+            f"table_exists={data_catalog_table.exists()}",
         )
     )
 
@@ -713,17 +705,6 @@ def run_checks(data: dict[str, pd.DataFrame]) -> tuple[list[CheckResult], list[I
             )
         )
 
-    if not docs_sync_ok:
-        issues.append(
-            Issue(
-                severity="low",
-                area="governance",
-                issue="Validation report in docs is not synchronized with canonical output report.",
-                impact="Conflicting QA narratives reduce executive trust and interview defensibility.",
-                recommendation="Publish governance artifacts after pipeline completion to keep docs synchronized.",
-            )
-        )
-
     if not version_semver_ok or not changelog_ok:
         issues.append(
             Issue(
@@ -852,7 +833,6 @@ def write_outputs(
             "- `outputs/tables/scenario_benchmark_by_seed.csv`",
             "- `outputs/reports/metric_governance_registry.md`",
             "- `outputs/tables/data_catalog.csv`",
-            "- `outputs/reports/data_catalog.md`",
             "- `outputs/tables/release_manifest.csv`",
             "- `outputs/reports/release_governance.md`",
         ]

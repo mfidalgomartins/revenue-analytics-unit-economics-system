@@ -22,7 +22,6 @@ RNG = np.random.default_rng(SEED)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
-REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 START_DATE = pd.Timestamp("2023-01-01")
 END_DATE = pd.Timestamp("2025-12-31")
@@ -306,33 +305,6 @@ def generate_marketing_spend() -> pd.DataFrame:
     return marketing
 
 
-def write_generation_note(customers: pd.DataFrame, transactions: pd.DataFrame) -> None:
-    """Persist a short note describing simulated business behaviors."""
-    margins = 1 - (transactions["cost"].sum() / transactions["revenue"].sum())
-
-    note = f"""# Synthetic Data Generation Note
-
-The synthetic data generation layer simulates a B2B company from {START_DATE.date()} to {END_DATE.date()}.
-
-Simulated business behavior:
-- Acquisition channels produce different customer quality and retention levels.
-- Segment mix by channel affects average order value and transaction frequency.
-- Revenue is intentionally right-skewed to reflect long-tail customer spending.
-- A small high-value customer group produces occasional outsized transactions.
-- Lower-quality customers churn faster and show lower-value orders.
-- Product and channel combinations create margin variation, including some unprofitable transactions.
-
-Generated scale:
-- Customers: {len(customers):,}
-- Transactions: {len(transactions):,}
-- Average gross margin: {margins:.1%}
-- Simulation seed: {SEED}
-"""
-
-    REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    (REPORTS_DIR / "synthetic_data_generation_note.md").write_text(note, encoding="utf-8")
-
-
 def save_outputs(customers: pd.DataFrame, transactions: pd.DataFrame, marketing: pd.DataFrame) -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -357,7 +329,6 @@ def main() -> None:
     marketing_spend = generate_marketing_spend()
 
     save_outputs(customers, transactions, marketing_spend)
-    write_generation_note(customers, transactions)
 
     print("Synthetic data generated successfully.")
     print(f"customers: {len(customers):,}")

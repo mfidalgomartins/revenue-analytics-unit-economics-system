@@ -11,7 +11,6 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 OUT_TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
-OUT_REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 BENCHMARK_SEEDS = [7, 21, 42, 84, 126]
 BASELINE_SEED = 42
@@ -65,7 +64,6 @@ def build_benchmark_pack() -> pd.DataFrame:
 
 def write_outputs(benchmark: pd.DataFrame) -> None:
     OUT_TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    OUT_REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     benchmark_out = benchmark.copy()
     numeric_cols = [
@@ -88,33 +86,6 @@ def write_outputs(benchmark: pd.DataFrame) -> None:
     uplift_std = float(uplift.std(ddof=0))
     positive_rate = float((uplift > 0).mean())
 
-    lines = [
-        "# Scenario Benchmark Report",
-        "",
-        "## Scope",
-        f"- Seeds benchmarked: `{', '.join(str(s) for s in BENCHMARK_SEEDS)}`",
-        "- Per-seed workflow: data generation -> feature engineering -> scenario decision engine",
-        "- Baseline model restored to seed `42` after benchmark completion.",
-        "",
-        "## Uplift Stability Summary",
-        f"- Mean estimated uplift: `${uplift_mean:,.2f}`",
-        f"- Median estimated uplift: `${uplift_median:,.2f}`",
-        f"- Min estimated uplift: `${uplift_min:,.2f}`",
-        f"- Max estimated uplift: `${uplift_max:,.2f}`",
-        f"- Std deviation: `${uplift_std:,.2f}`",
-        f"- Positive uplift rate: `{positive_rate:.1%}`",
-        "",
-        "## Interpretation",
-        "- Benchmarking indicates how sensitive the policy engine is to synthetic draw variation.",
-        "- Directional consistency across seeds supports stronger interview defensibility.",
-        "",
-        "## Output Files",
-        "- `outputs/tables/scenario_benchmark_by_seed.csv`",
-        "- `outputs/reports/scenario_benchmark_report.md`",
-    ]
-    (OUT_REPORTS_DIR / "scenario_benchmark_report.md").write_text(
-        "\n".join(lines), encoding="utf-8"
-    )
 
 
 def restore_baseline_seed() -> None:
@@ -130,7 +101,6 @@ def run() -> None:
 
     print("Scenario benchmark pack completed.")
     print(f"benchmark_table: {OUT_TABLES_DIR / 'scenario_benchmark_by_seed.csv'}")
-    print(f"benchmark_report: {OUT_REPORTS_DIR / 'scenario_benchmark_report.md'}")
     print("baseline_seed_restored: 42")
 
 

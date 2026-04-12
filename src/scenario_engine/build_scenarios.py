@@ -20,7 +20,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DIR = PROJECT_ROOT / "data" / "raw"
 PROC_DIR = PROJECT_ROOT / "data" / "processed"
 OUT_TABLES_DIR = PROJECT_ROOT / "outputs" / "tables"
-OUT_REPORTS_DIR = PROJECT_ROOT / "outputs" / "reports"
 
 
 UPLIFT_POLICY = {
@@ -181,7 +180,6 @@ def build_stress_test_summary(plan: pd.DataFrame) -> pd.DataFrame:
 
 def write_outputs(plan: pd.DataFrame, summary: pd.DataFrame, stress_summary: pd.DataFrame) -> None:
     OUT_TABLES_DIR.mkdir(parents=True, exist_ok=True)
-    OUT_REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 
     plan_out = plan.copy()
     summary_out = summary.copy()
@@ -207,52 +205,6 @@ def write_outputs(plan: pd.DataFrame, summary: pd.DataFrame, stress_summary: pd.
     summary_out.to_csv(OUT_TABLES_DIR / "scenario_outcomes_summary.csv", index=False)
     stress_out.round(4).to_csv(OUT_TABLES_DIR / "scenario_stress_test_summary.csv", index=False)
 
-    s = summary_out.iloc[0]
-    stress_rows = []
-    for r in stress_out.itertuples(index=False):
-        stress_rows.append(
-            "| "
-            + " | ".join(
-                [
-                    str(r.scenario_name),
-                    f"{float(r.cac_multiplier):.2f}x",
-                    f"{float(r.ltv_multiplier):.2f}x",
-                    f"${float(r.scenario_contribution_est):,.2f}",
-                    f"${float(r.estimated_uplift_vs_baseline):,.2f}",
-                    f"${float(r.estimated_uplift_vs_base_case):,.2f}",
-                ]
-            )
-            + " |"
-        )
-
-    report = f"""# Scenario Decision Engine Report
-
-## Scenario
-- Name: `{s['scenario_name']}`
-- Policy: cut inefficient channels, hold borderline channels, and reallocate to efficient channels while keeping total budget constant.
-
-## Governance Thresholds Used
-- Efficient: `LTV/CAC >= {EFFICIENCY_THRESHOLDS.ltv_cac_target}` and `payback <= {EFFICIENCY_THRESHOLDS.payback_target_months} months`
-- Inefficient: `LTV/CAC < {EFFICIENCY_THRESHOLDS.ineff_ltv_cac}` or `payback > {EFFICIENCY_THRESHOLDS.ineff_payback_months} months`
-
-## Estimated Outcome
-- Baseline total budget: `${s['total_budget_baseline']:,.2f}`
-- Scenario total budget: `${s['total_budget_scenario']:,.2f}`
-- Baseline estimated contribution: `${s['baseline_contribution_est']:,.2f}`
-- Scenario estimated contribution: `${s['scenario_contribution_est']:,.2f}`
-- Estimated contribution uplift: `${s['estimated_contribution_uplift']:,.2f}`
-
-## Stress Test (CAC and LTV shocks)
-| scenario_name | CAC shock | LTV shock | scenario contribution | uplift vs baseline | uplift vs base case |
-| --- | --- | --- | --- | --- | --- |
-{chr(10).join(stress_rows)}
-
-## Interpretation
-- This is a policy simulation, not a forecast.
-- Estimates assume channel CAC and average LTV remain stable under spend changes.
-- Use as directional decision support for budget steering and experimentation priorities.
-"""
-    (OUT_REPORTS_DIR / "scenario_decision_engine_report.md").write_text(report, encoding="utf-8")
 
 
 def run() -> None:
@@ -265,7 +217,6 @@ def run() -> None:
     print(f"plan: {OUT_TABLES_DIR / 'scenario_reallocation_plan.csv'}")
     print(f"summary: {OUT_TABLES_DIR / 'scenario_outcomes_summary.csv'}")
     print(f"stress_summary: {OUT_TABLES_DIR / 'scenario_stress_test_summary.csv'}")
-    print(f"report: {OUT_REPORTS_DIR / 'scenario_decision_engine_report.md'}")
 
 
 def main() -> None:
