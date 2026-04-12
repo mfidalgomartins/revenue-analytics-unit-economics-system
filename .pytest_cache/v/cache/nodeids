@@ -1,0 +1,19 @@
+[
+  "tests/test_analysis_core.py::test_compute_overall_revenue_health_builds_monthly_metrics",
+  "tests/test_analysis_core.py::test_safe_pct_change_handles_zero_base",
+  "tests/test_dashboard_kpi_snapshot.py::test_dashboard_kpi_snapshot_contract_full_coverage",
+  "tests/test_dashboard_payload.py::test_dashboard_payload_contains_policy_and_no_volatile_timestamp",
+  "tests/test_feature_engineering.py::test_build_customer_metrics_computes_expected_fields",
+  "tests/test_feature_engineering.py::test_build_unit_economics_handles_positive_and_negative_payback",
+  "tests/test_governance_registry.py::test_channel_priority_score_behaves_directionally",
+  "tests/test_governance_registry.py::test_classify_channel_efficiency_thresholds",
+  "tests/test_governance_registry.py::test_payload_dict_includes_expected_policy_keys",
+  "tests/test_metric_contracts.py::test_raw_and_processed_metric_contracts",
+  "tests/test_metric_contracts.py::test_unit_economics_classification_contract",
+  "tests/test_release_governance.py::test_version_is_valid_semver_and_changelog_is_aligned",
+  "tests/test_scenario_benchmark.py::test_scenario_benchmark_positive_uplift_contract",
+  "tests/test_scenario_benchmark.py::test_scenario_benchmark_seed_coverage_contract",
+  "tests/test_scenario_engine.py::test_reallocation_plan_preserves_total_budget_and_shapes_actions",
+  "tests/test_validation_raw.py::test_build_results_all_pass_for_clean_data",
+  "tests/test_validation_raw.py::test_build_results_detects_key_failures"
+]
