@@ -29,6 +29,8 @@ reports/        tests/          docs/
 - `outputs/tables/scenario_reallocation_plan.csv`
 - `outputs/reports/pre_delivery_validation_report.md`
 
+Live dashboard: [https://mfidalgomartins.github.io/revenue-unit-economics-system/](https://mfidalgomartins.github.io/revenue-unit-economics-system/)
+
 ## Why this is above a typical portfolio project
 This is not a set of charts. It is a full decision system with governed metrics, QA gates, and scenario logic tied to real executive trade-offs.
 
