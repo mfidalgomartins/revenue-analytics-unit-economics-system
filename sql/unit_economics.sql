@@ -1,4 +1,4 @@
--- Reference transformation for unit_economics (DuckDB/Postgres compatible SQL)
+-- Reference transformation for unit_economics (DuckDB-style SQL)
 WITH cust AS (
   SELECT
     acquisition_channel,

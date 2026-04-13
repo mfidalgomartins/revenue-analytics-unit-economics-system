@@ -30,7 +30,7 @@ jobs:
 
       - name: Package artifacts
         run: |
-          tar -czf revenue-analytics-artifacts.tgz outputs dashboard data/processed
+          tar -czf revenue-analytics-artifacts.tgz outputs data/processed
 
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2

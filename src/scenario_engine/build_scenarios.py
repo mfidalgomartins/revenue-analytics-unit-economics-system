@@ -35,6 +35,14 @@ STRESS_SCENARIOS = {
     "worst_case": {"cac_multiplier": 1.15, "ltv_multiplier": 0.88},
 }
 
+# Response assumptions avoid the unrealistic "flat CAC/LTV under any spend change" behavior.
+RESPONSE_ASSUMPTIONS = {
+    "efficient": {"cac_elasticity": 0.10, "ltv_elasticity": -0.08},
+    "borderline": {"cac_elasticity": 0.16, "ltv_elasticity": -0.12},
+    "inefficient": {"cac_elasticity": 0.24, "ltv_elasticity": -0.18},
+    "undefined": {"cac_elasticity": 0.20, "ltv_elasticity": -0.15},
+}
+
 
 def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
     unit_economics = pd.read_csv(PROC_DIR / "unit_economics.csv")
@@ -77,12 +85,34 @@ def build_reallocation_plan(
 
     ue["redistribution_spend"] = redistribution
     ue["scenario_spend"] = ue["preliminary_spend"] + ue["redistribution_spend"]
+    ue["spend_change_pct"] = np.where(
+        ue["baseline_spend"] > 0,
+        (ue["scenario_spend"] / ue["baseline_spend"]) - 1,
+        0.0,
+    )
+
+    ue["cac_elasticity"] = ue["efficiency_status"].map(
+        {k: v["cac_elasticity"] for k, v in RESPONSE_ASSUMPTIONS.items()}
+    ).fillna(RESPONSE_ASSUMPTIONS["undefined"]["cac_elasticity"])
+    ue["ltv_elasticity"] = ue["efficiency_status"].map(
+        {k: v["ltv_elasticity"] for k, v in RESPONSE_ASSUMPTIONS.items()}
+    ).fillna(RESPONSE_ASSUMPTIONS["undefined"]["ltv_elasticity"])
+
+    scenario_cac_factor = np.clip(1 + ue["spend_change_pct"] * ue["cac_elasticity"], 0.75, 1.60)
+    scenario_ltv_factor = np.clip(1 + ue["spend_change_pct"] * ue["ltv_elasticity"], 0.65, 1.20)
+
+    ue["scenario_cac_assumed"] = ue["CAC"] * scenario_cac_factor
+    ue["scenario_ltv_assumed"] = ue["average_LTV"] * scenario_ltv_factor
 
     ue["baseline_customers_est"] = np.where(ue["CAC"] > 0, ue["baseline_spend"] / ue["CAC"], np.nan)
-    ue["scenario_customers_est"] = np.where(ue["CAC"] > 0, ue["scenario_spend"] / ue["CAC"], np.nan)
+    ue["scenario_customers_est"] = np.where(
+        ue["scenario_cac_assumed"] > 0,
+        ue["scenario_spend"] / ue["scenario_cac_assumed"],
+        np.nan,
+    )
 
     ue["baseline_contribution_est"] = ue["baseline_customers_est"] * ue["average_LTV"]
-    ue["scenario_contribution_est"] = ue["scenario_customers_est"] * ue["average_LTV"]
+    ue["scenario_contribution_est"] = ue["scenario_customers_est"] * ue["scenario_ltv_assumed"]
 
     ue["spend_change"] = ue["scenario_spend"] - ue["baseline_spend"]
     ue["contribution_change_est"] = ue["scenario_contribution_est"] - ue["baseline_contribution_est"]
@@ -108,7 +138,9 @@ def build_reallocation_plan(
         "scenario_spend",
         "spend_change",
         "CAC",
+        "scenario_cac_assumed",
         "average_LTV",
+        "scenario_ltv_assumed",
         "LTV_to_CAC",
         "approximate_payback_period",
         "baseline_customers_est",
@@ -147,11 +179,11 @@ def build_stress_test_summary(plan: pd.DataFrame) -> pd.DataFrame:
         ltv_multiplier = float(cfg["ltv_multiplier"])
 
         scenario_customers = np.where(
-            (plan["CAC"] * cac_multiplier) > 0,
-            plan["scenario_spend"] / (plan["CAC"] * cac_multiplier),
+            (plan["scenario_cac_assumed"] * cac_multiplier) > 0,
+            plan["scenario_spend"] / (plan["scenario_cac_assumed"] * cac_multiplier),
             np.nan,
         )
-        scenario_contribution = scenario_customers * (plan["average_LTV"] * ltv_multiplier)
+        scenario_contribution = scenario_customers * (plan["scenario_ltv_assumed"] * ltv_multiplier)
 
         rows.append(
             {
@@ -189,7 +221,9 @@ def write_outputs(plan: pd.DataFrame, summary: pd.DataFrame, stress_summary: pd.
         "scenario_spend",
         "spend_change",
         "CAC",
+        "scenario_cac_assumed",
         "average_LTV",
+        "scenario_ltv_assumed",
         "LTV_to_CAC",
         "approximate_payback_period",
         "baseline_customers_est",

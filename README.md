@@ -20,7 +20,7 @@ Data generation → profiling → feature engineering → analysis → scenario 
 ## Repository structure
 ```text
 src/            data/           sql/           outputs/
-reports/        tests/          docs/
+tests/          docs/
 ```
 
 ## Core outputs
@@ -47,4 +47,4 @@ python src/run_pipeline.py
 - LTV is observed contribution margin, not a forward forecast.
 - CAC uses simplified attribution assumptions.
 
-Tools: Python, SQL, DuckDB, pandas, NumPy, scikit-learn, matplotlib, seaborn, Plotly, Chart.js.
+Tools: Python, SQL, pandas, NumPy, matplotlib, HTML, CSS, vanilla JavaScript.

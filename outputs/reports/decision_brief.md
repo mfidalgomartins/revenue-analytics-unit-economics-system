@@ -11,13 +11,13 @@
 
 ## Scenario Summary (Policy Simulation)
 - Baseline contribution: $16,564,031.92
-- Scenario contribution: $36,877,987.20
-- Estimated uplift: $20,313,955.28
+- Scenario contribution: $25,956,579.14
+- Estimated uplift: $9,392,547.22
 
 ## Stress Cases
-- Best case: $44,253,584.64
-- Base case: $36,877,987.20
-- Worst case: $28,219,677.16
+- Best case: $31,147,894.97
+- Base case: $25,956,579.14
+- Worst case: $19,862,425.78
 
 ## Recommendations
 1. Shift budget away from inefficient channels until LTV/CAC >= 3.0 and payback <= 12 months.
@@ -28,4 +28,4 @@
 - Data is synthetic and intended for methodology demonstration, not forecasting.
 - LTV is observed contribution margin per customer during the available window.
 - CAC is period-level spend divided by customers acquired in the channel.
-- Payback uses observed monthly contribution; attribution lags are not modeled.
+- Scenario outputs apply bounded CAC/LTV response assumptions under spend changes; they are policy simulations, not forecasts.

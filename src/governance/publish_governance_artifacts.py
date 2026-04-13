@@ -72,7 +72,7 @@ def write_decision_brief() -> None:
         "- Data is synthetic and intended for methodology demonstration, not forecasting.",
         "- LTV is observed contribution margin per customer during the available window.",
         "- CAC is period-level spend divided by customers acquired in the channel.",
-        "- Payback uses observed monthly contribution; attribution lags are not modeled.",
+        "- Scenario outputs apply bounded CAC/LTV response assumptions under spend changes; they are policy simulations, not forecasts.",
     ]
 
     (REPORTS_DIR / "decision_brief.md").write_text("\n".join(brief_lines), encoding="utf-8")

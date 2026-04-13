@@ -49,7 +49,7 @@
 - `outputs/reports/release_governance.md`: release governance policy and current-version status.
 
 ## SQL
-- `sql/`: reference SQL transforms for core analytical tables (DuckDB/Postgres compatible).
+- `sql/`: reference SQL transforms for core analytical tables (DuckDB-style reference logic).
 
 ## Dashboard
 - `outputs/dashboard/`: executive dashboard export artifacts for BI presentation.

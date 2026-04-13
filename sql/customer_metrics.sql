@@ -1,4 +1,4 @@
--- Reference transformation for customer_metrics (DuckDB/Postgres compatible SQL)
+-- Reference transformation for customer_metrics (DuckDB-style SQL)
 WITH tx AS (
   SELECT
     customer_id,

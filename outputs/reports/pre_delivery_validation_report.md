@@ -41,9 +41,9 @@ Project: Revenue Analytics & Unit Economics System
 | governance_checks | release_changelog_alignment | PASS | changelog_contains_version=True |
 | governance_checks | dashboard_deterministic_metadata | PASS | Dashboard payload should avoid volatile build timestamps. |
 | decision_support_checks | scenario_engine_outputs | PASS | scenario_summary_rows=1, scenario_plan_rows=6 |
-| decision_support_checks | scenario_uplift_directionality | PASS | estimated_contribution_uplift=20313955.28 |
+| decision_support_checks | scenario_uplift_directionality | PASS | estimated_contribution_uplift=9392547.22 |
 | decision_support_checks | scenario_stress_test_outputs | PASS | scenario_stress_rows=3 |
-| decision_support_checks | scenario_stress_monotonicity | PASS | required_cases_present=True; best=44253584.64, base=36877987.20, worst=28219677.16 |
+| decision_support_checks | scenario_stress_monotonicity | PASS | required_cases_present=True; best=31147894.97, base=25956579.14, worst=19862425.78 |
 | decision_support_checks | scenario_benchmark_outputs | PASS | scenario_benchmark_rows=5 |
 | decision_support_checks | scenario_benchmark_seed_coverage | PASS | seeds_present=[7, 21, 42, 84, 126] |
 | decision_support_checks | scenario_benchmark_uplift_resilience | PASS | positive_uplift_rate=100.00% |
